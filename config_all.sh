@@ -21,21 +21,20 @@ echo $password | sudo -S apt-get install -y libncursesw5-dev libpng-dev libreadl
 echo $password | sudo -S apt-get install -y openssl python-openssl rsync scons libopenblas-dev
 
 echo $password | sudo -S apt install -y python3-pip python3-dev python3-smbus cmake
-echo $password | sudo -S pip3 install -U pip testresources setuptools
-echo $password | sudo -S pip3 install flask
-echo $password | sudo -S pip3 install pyserial
-echo $password | sudo -S pip3 install -U numpy==1.19.5
-echo $password | sudo -S pip3 install pillow==8.4.0
-echo $password | sudo -S pip3 install matplotlib==3.2.1
-echo $password | sudo -S pip3 install pandas==1.1.5
-echo $password | sudo -S pip3 install scipy==1.5.4
-echo $password | sudo -S pip3 install cython
-echo $password | sudo -S pip3 install aiohttp
-echo $password | sudo -S pip3 install scikit-learn==0.22.0
-echo $password | sudo -S pip3 install seaborn==0.10.1
+echo $password | sudo -S python3 -m pip install -U pip testresources setuptools
+echo $password | sudo -S python3 -m pip install flask
+echo $password | sudo -S python3 -m pip install -U numpy==1.19.4
+echo $password | sudo -S python3 -m pip install scipy==1.5.3
+echo $password | sudo -S python3 -m pip install aiohttp
+echo $password | sudo -S python3 -m pip install pillow==8.4.0
+echo $password | sudo -S python3 -m pip install pandas==1.1.5
+echo $password | sudo -S python3 -m pip install matplotlib
+echo $password | sudo -S python3 -m pip install cython
+echo $password | sudo -S python3 -m pip install scikit-learn==0.22.0
+echo $password | sudo -S python3 -m pip install seaborn==0.10.1
 
-echo $password | sudo -S pip3 install -U future mock h5py keras_preprocessing keras_applications gast enum34 futures protobuf grpcio 
-echo $password | sudo -S pip3 install -U absl-py py-cpuinfo psutil portpicker six mock requests astor termcolor protobuf wrapt google-pasta
+echo $password | sudo -S python3 -m pip install -U future mock h5py keras_preprocessing keras_applications gast enum34 futures protobuf grpcio 
+echo $password | sudo -S python3 -m pip install -U absl-py py-cpuinfo psutil portpicker six mock requests astor termcolor protobuf wrapt google-pasta
 echo $password | sudo -S apt-get install -y virtualenv
 
 # install traitlets (master)
@@ -43,7 +42,7 @@ echo $password | sudo -S python3 -m pip install traitlets
 
 # install jupyter lab
 echo $password | sudo -S apt install -y nodejs npm
-echo $password | sudo -S pip3 install -U jupyter jupyterlab
+echo $password | sudo -S python3 -m pip install -U jupyter jupyterlab
 jupyter lab --generate-config
 
 # set jupyter password
@@ -168,7 +167,8 @@ echo $password | sudo -S bash -c "echo \"Exec=jupyter lab --ip=$jetsonip --no-br
 # add aliases for quick access
 echo $password | sudo -S echo "alias furuta='source ~/Furuta/venv/bin/activate'" >> /home/$USER/.bashrc
 
-# give permission for serial communication
+# setup serial communication
+echo $password | sudo -S python3 -m pip install pyserial
 echo $password | sudo -S adduser $USER dialout
 
 # reboot the system

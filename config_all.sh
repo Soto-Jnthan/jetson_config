@@ -21,28 +21,28 @@ echo $password | sudo -S apt-get install -y libncursesw5-dev libpng-dev libreadl
 echo $password | sudo -S apt-get install -y openssl python-openssl rsync scons libopenblas-dev
 
 echo $password | sudo -S apt install -y python3-pip python3-dev python3-smbus cmake
-echo $password | sudo -S python3 -m pip install -U pip testresources setuptools
-echo $password | sudo -S python3 -m pip install flask
-echo $password | sudo -S python3 -m pip install -U numpy==1.19.4
-echo $password | sudo -S python3 -m pip install scipy==1.5.3
-echo $password | sudo -S python3 -m pip install aiohttp
-echo $password | sudo -S python3 -m pip install pillow==8.4.0
-echo $password | sudo -S python3 -m pip install pandas==1.1.5
-echo $password | sudo -S python3 -m pip install matplotlib
-echo $password | sudo -S python3 -m pip install cython
-echo $password | sudo -S python3 -m pip install scikit-learn==0.22.0
-echo $password | sudo -S python3 -m pip install seaborn==0.10.1
+python3 -m pip install -U pip testresources setuptools
+python3 -m pip install flask
+python3 -m pip install -U numpy==1.19.3
+python3 -m pip install -U scipy==1.5.3
+python3 -m pip install aiohttp
+python3 -m pip install pillow==8.4.0
+python3 -m pip install pandas==1.1.5
+python3 -m pip install matplotlib
+python3 -m pip install cython
+python3 -m pip install scikit-learn==0.24.2
+python3 -m pip install seaborn==0.10.1
 
-echo $password | sudo -S python3 -m pip install -U future mock h5py keras_preprocessing keras_applications gast enum34 futures protobuf grpcio 
-echo $password | sudo -S python3 -m pip install -U absl-py py-cpuinfo psutil portpicker six mock requests astor termcolor protobuf wrapt google-pasta
+python3 -m pip install -U future mock h5py keras_preprocessing keras_applications gast enum34 futures protobuf grpcio 
+python3 -m pip install -U absl-py py-cpuinfo psutil portpicker six mock requests astor termcolor protobuf wrapt google-pasta
 echo $password | sudo -S apt-get install -y virtualenv
 
 # install traitlets (master)
-echo $password | sudo -S python3 -m pip install traitlets
+python3 -m pip install traitlets
 
 # install jupyter lab
 echo $password | sudo -S apt install -y nodejs npm
-echo $password | sudo -S python3 -m pip install -U jupyter jupyterlab
+python3 -m pip install -U jupyter jupyterlab
 jupyter lab --generate-config
 
 # set jupyter password
@@ -66,79 +66,79 @@ pip install -U torch-1.10.0-cp36-cp36m-linux_aarch64.whl
 pip install -U torch-tb-profiler==0.2.1
 pip install -U Jetson.GPIO
 pip install -U stable-baselines3==1.3.0
-pip install -U backports.entry-points-selectable==1.1.1
-pip install -U cachetools==4.2.4
-pip install -U certifi==2021.10.8
-pip install -U cfgv==3.3.1
-pip install -U charset-normalizer==2.0.7
-pip install -U click==8.0.3
-pip install -U cloudpickle==2.0.0
-pip install -U configparser==5.0.2
-pip install -U cycler==0.11.0
-pip install -U dataclasses==0.8
-pip install -U distlib==0.3.3
-pip install -U distro==1.6.0
-pip install -U docker-pycreds==0.4.0
-pip install -U filelock==3.4.0
-pip install -U flake8==4.0.1
-pip install -U gitdb==4.0.7
-pip install -U GitPython==3.1.20
-pip install -U google-auth==2.3.0
-pip install -U google-auth-oauthlib==0.4.6
-pip install -U gym-cartpole-swingup==0.1.0
-pip install -U identify==2.4.0
-pip install -U idna==3.3
-pip install -U importlib-metadata==4.2.0
-pip install -U importlib-resources==5.4.0
-pip install -U irc==19.0.1
-pip install -U jaraco.classes==3.2.1
-pip install -U jaraco.collections==3.4.0
-pip install -U jaraco.functools==3.4.0
-pip install -U jaraco.logging==3.1.0
-pip install -U jaraco.stream==3.0.3
-pip install -U jaraco.text==3.6.0
-pip install -U jetson-stats==3.1.1
-pip install -U kiwisolver==1.3.1
-pip install -U Markdown==3.3.4
-pip install -U mccabe==0.6.1
-pip install -U more-itertools==8.12.0
-pip install -U nodeenv==1.6.0
-pip install -U oauthlib==3.1.1
-pip install -U packaging==21.2
-pip install -U pathtools==0.1.2
-pip install -U pip-autoremove==0.10.0
-pip install -U pkg_resources==0.0.0
-pip install -U platformdirs==2.4.0
-pip install -U pre-commit==2.15.0
-pip install -U promise==2.3
-pip install -U pyasn1==0.4.8
-pip install -U pyasn1-modules==0.2.8
-pip install -U pycodestyle==2.8.0
-pip install -U pyflakes==2.4.0
-pip install -U pyglet==1.5.21
-pip install -U pyparsing==2.4.7
-pip install -U python-dateutil==2.8.2
-pip install -U pytz==2021.3
-pip install -U PyYAML==6.0
-pip install -U requests-oauthlib==1.3.0
-pip install -U rsa==4.7.2
-pip install -U scikit-build==0.12.0
-pip install -U sentry-sdk==1.4.3
-pip install -U shortuuid==1.0.1
-pip install -U smmap==4.0.0
-pip install -U spidev==3.5
-pip install -U subprocess32==3.5.4
-pip install -U tempora==4.1.2
-pip install -U tensorboard==2.7.0
-pip install -U tensorboard-data-server==0.6.1
-pip install -U tensorboard-plugin-wit==1.8.0
-pip install -U toml==0.10.2
-pip install -U typing-extensions==3.10.0.2
-pip install -U urllib3==1.26.7
-pip install -U wandb==0.12.6
-pip install -U Werkzeug==2.0.2
-pip install -U yaspin==2.1.0
-pip install -U zipp==3.6.0
+pip install backports.entry-points-selectable==1.1.1
+pip install cachetools==4.2.4
+pip install certifi==2021.10.8
+pip install cfgv==3.3.1
+pip install charset-normalizer==2.0.7
+pip install click==8.0.3
+pip install cloudpickle==2.0.0
+pip install configparser==5.0.2
+pip install cycler==0.11.0
+pip install dataclasses==0.8
+pip install distlib==0.3.3
+pip install distro==1.6.0
+pip install docker-pycreds==0.4.0
+pip install filelock==3.4.0
+pip install flake8==4.0.1
+pip install gitdb==4.0.7
+pip install GitPython==3.1.20
+pip install google-auth==2.3.0
+pip install google-auth-oauthlib==0.4.6
+pip install gym-cartpole-swingup==0.1.0
+pip install identify==2.4.0
+pip install idna==3.3
+pip install importlib-metadata==4.2.0
+pip install importlib-resources==5.4.0
+pip install irc==19.0.1
+pip install jaraco.classes==3.2.1
+pip install jaraco.collections==3.4.0
+pip install jaraco.functools==3.4.0
+pip install jaraco.logging==3.1.0
+pip install jaraco.stream==3.0.3
+pip install jaraco.text==3.6.0
+pip install jetson-stats==3.1.1
+pip install kiwisolver==1.3.1
+pip install Markdown==3.3.4
+pip install mccabe==0.6.1
+pip install more-itertools==8.12.0
+pip install nodeenv==1.6.0
+pip install oauthlib==3.1.1
+pip install packaging==21.2
+pip install pathtools==0.1.2
+pip install pip-autoremove==0.10.0
+pip install pkg_resources==0.0.0
+pip install platformdirs==2.4.0
+pip install pre-commit==2.15.0
+pip install promise==2.3
+pip install pyasn1==0.4.8
+pip install pyasn1-modules==0.2.8
+pip install pycodestyle==2.8.0
+pip install pyflakes==2.4.0
+pip install pyglet==1.5.21
+pip install pyparsing==2.4.7
+pip install python-dateutil==2.8.2
+pip install pytz==2021.3
+pip install PyYAML==6.0
+pip install requests-oauthlib==1.3.0
+pip install rsa==4.7.2
+pip install scikit-build==0.12.0
+pip install sentry-sdk==1.4.3
+pip install shortuuid==1.0.1
+pip install smmap==4.0.0
+pip install spidev==3.5
+pip install subprocess32==3.5.4
+pip install tempora==4.1.2
+pip install tensorboard==2.7.0
+pip install tensorboard-data-server==0.6.1
+pip install tensorboard-plugin-wit==1.8.0
+pip install toml==0.10.2
+pip install typing-extensions==3.10.0.2
+pip install urllib3==1.26.7
+pip install wandb==0.12.6
+pip install Werkzeug==2.0.2
+pip install yaspin==2.1.0
+pip install zipp==3.6.0
 rm torch-1.10.0-cp36-cp36m-linux_aarch64.whl
 python3 -m ipykernel install --user --name=Furuta
 deactivate
@@ -168,7 +168,7 @@ echo $password | sudo -S bash -c "echo \"Exec=jupyter lab --ip=$jetsonip --no-br
 echo $password | sudo -S echo "alias furuta='source ~/Furuta/venv/bin/activate'" >> /home/$USER/.bashrc
 
 # setup serial communication
-echo $password | sudo -S python3 -m pip install pyserial
+python3 -m pip install pyserial
 echo $password | sudo -S adduser $USER dialout
 
 # reboot the system

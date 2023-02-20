@@ -26,7 +26,7 @@ echo $password | sudo -S pip3 install flask
 echo $password | sudo -S pip3 install pyserial
 echo $password | sudo -S pip3 install -U numpy==1.19.5
 echo $password | sudo -S pip3 install pillow==8.4.0
-echo $password | sudo -S pip3 install matplotlib==3.3.4
+echo $password | sudo -S pip3 install matplotlib==3.2.1
 echo $password | sudo -S pip3 install pandas==1.1.5
 echo $password | sudo -S pip3 install scipy==1.5.4
 echo $password | sudo -S pip3 install cython

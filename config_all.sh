@@ -32,7 +32,7 @@ python3 -m pip install cython
 python3 -m pip install scikit-learn==0.22.0
 python3 -m pip install seaborn==0.10.1
 
-echo $password | sudo -S ln -s /usr/include/locale.h /usr/include/xlocale.h
+#echo $password | sudo -S ln -s /usr/include/locale.h /usr/include/xlocale.h
 python3 -m pip install -U future mock h5py keras_preprocessing keras_applications gast enum34 futures protobuf grpcio 
 python3 -m pip install -U absl-py py-cpuinfo psutil portpicker six mock requests astor termcolor protobuf wrapt google-pasta
 echo $password | sudo -S apt-get install -y virtualenv

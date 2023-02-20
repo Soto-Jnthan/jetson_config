@@ -15,21 +15,24 @@ echo $password | sudo -S apt install htop -y
 
 # install necessary dependencies
 echo $password | sudo -S apt-get install -y libhdf5-serial-dev hdf5-tools libhdf5-dev zlib1g-dev zip libjpeg8-dev autoconf bc g++-8 gcc-8 clang-8  
-echo $password | sudo -S apt-get install -y libatlas-base-dev libfreetype6-dev build-essential lld-8 gettext-base gfortran-8 iputils-ping
+echo $password | sudo -S apt-get install -y libatlas-base-dev libfreetype6-dev build-essential lld-8 gettext-base gfortran gfortran-8 iputils-ping
 echo $password | sudo -S apt-get install -y libbz2-dev libc++-dev libcgal-dev libffi-dev libjpeg-dev liblzma-dev libncurses5-dev libxslt-dev
 echo $password | sudo -S apt-get install -y libncursesw5-dev libpng-dev libreadline-dev libssl-dev libsqlite3-dev libxml2-dev locales moreutils
 echo $password | sudo -S apt-get install -y openssl python-openssl rsync scons libopenblas-dev
-echo $password | sudo -S apt install -y python3-pip python3-dev python3-smbus cmake
+echo $password | sudo -S apt install -y python3-pip python3-dev python3-smbus cmake 
+
 python3 -m pip install -U pip testresources setuptools
 python3 -m pip install flask
-python3 -m pip install -U numpy==1.18.3
+python3 -m pip install -U numpy==1.19.3
 python3 -m pip install pillow==7.1.2
 python3 -m pip install matplotlib==3.2.1
 python3 -m pip install pandas==1.0.3
-python3 -m pip install scipy==1.4.1
+python3 -m pip install -U scipy==1.5.3
 python3 -m pip install cython
 python3 -m pip install scikit-learn==0.22.0
 python3 -m pip install seaborn==0.10.1
+
+echo $password | sudo -S ln -s /usr/include/locale.h /usr/include/xlocale.h
 python3 -m pip install -U future mock h5py keras_preprocessing keras_applications gast enum34 futures protobuf grpcio 
 python3 -m pip install -U absl-py py-cpuinfo psutil portpicker six mock requests astor termcolor protobuf wrapt google-pasta
 echo $password | sudo -S apt-get install -y virtualenv
@@ -40,7 +43,7 @@ python3 -m pip install traitlets
 # install jupyter lab
 echo $password | sudo -S apt install -y nodejs npm
 python3 -m pip install -U jupyter jupyterlab
-jupyter lab --generate-config
+python3 -m notebook --generate-config
 
 # set jupyter password
 python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"

@@ -64,7 +64,8 @@ python3 -m virtualenv -p python3 ~/Furuta/venv --system-site-packages
 source ~/Furuta/venv/bin/activate
 wget https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
 pip install -U torch-1.10.0-cp36-cp36m-linux_aarch64.whl
-pip install -U torchvision
+pip install -U torch-tb-profiler==0.2.1
+pip install -U Jetson.GPIO
 pip install -U stable-baselines3==1.3.0
 pip install -U backports.entry-points-selectable==1.1.1
 pip install -U cachetools==4.2.4
@@ -98,7 +99,6 @@ pip install -U jaraco.logging==3.1.0
 pip install -U jaraco.stream==3.0.3
 pip install -U jaraco.text==3.6.0
 pip install -U jetson-stats==3.1.1
-pip install -U Jetson.GPIO==2.0.17
 pip install -U kiwisolver==1.3.1
 pip install -U Markdown==3.3.4
 pip install -U mccabe==0.6.1
@@ -134,7 +134,6 @@ pip install -U tensorboard==2.7.0
 pip install -U tensorboard-data-server==0.6.1
 pip install -U tensorboard-plugin-wit==1.8.0
 pip install -U toml==0.10.2
-pip install -U torch-tb-profiler==0.2.1
 pip install -U typing-extensions==3.10.0.2
 pip install -U urllib3==1.26.7
 pip install -U wandb==0.12.6

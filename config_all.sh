@@ -18,7 +18,7 @@ echo $password | sudo -S apt-get install -y autoconf bc build-essential g++-8 gc
 echo $password | sudo -S apt-get install -y libfreetype6-dev libhdf5-dev hdf5-tools zip libjpeg8-dev liblapack-dev libblas-dev libhdf5-serial-dev
 echo $password | sudo -S apt-get install -y iputils-ping libbz2-dev libc++-dev libcgal-dev libffi-dev libjpeg-dev liblzma-dev libncurses5-dev
 echo $password | sudo -S apt-get install -y libncursesw5-dev libpng-dev libreadline-dev libssl-dev libsqlite3-dev libxml2-dev libxslt-dev
-echo $password | sudo -S apt-get install -y locales moreutils openssl rsync scons libopenblas-dev libomp-dev libopenmpi-dev cmake zlib1g-dev
+echo $password | sudo -S apt-get install -y locales moreutils openssl rsync scons libopenblas-dev libomp5 libomp-dev libopenmpi-dev cmake zlib1g-dev
 echo $password | sudo -S apt-get install -y python3-dev python-openssl python3-pip virtualenv 
 
 # install traitlets (master)

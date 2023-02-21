@@ -6,7 +6,9 @@ password=$1
 
 cd ~
 
-python3 -m pip install packaging
+git clone -b legacy_py3.6 https://github.com/QUVA-Lab/e2cnn.git
+cd e2cnn
+python setup.py install
 
 # install jupyter lab
 echo $password | sudo -S apt install -y nodejs npm

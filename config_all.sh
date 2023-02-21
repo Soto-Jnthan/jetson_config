@@ -31,7 +31,7 @@ echo $password | sudo -S pip3 install -U absl-py py-cpuinfo psutil six requests 
 echo $password | sudo -S apt-get install -y virtualenv
 
 # install traitlets (master)
-python3 -m pip install traitlets
+echo $password | sudo -S pip3 install traitlets
 
 # install jupyter lab
 echo $password | sudo -S apt install -y nodejs npm

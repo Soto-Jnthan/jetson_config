@@ -18,7 +18,6 @@ pip install -U jaraco.functools==3.4.0
 pip install -U jaraco.logging==3.1.0
 pip install -U jaraco.stream==3.0.3
 pip install -U jaraco.text==3.6.0
-pip install -U jetson-stats==3.1.1
 pip install -U Jetson.GPIO
 pip install -U pyglet==1.5.21
 pip install -U tensorboard==2.7.0

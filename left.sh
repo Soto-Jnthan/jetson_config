@@ -6,9 +6,10 @@ password=$1
 
 cd ~
 
+python3 -m pip install -U setuptools
 git clone -b legacy_py3.6 https://github.com/QUVA-Lab/e2cnn.git
 cd e2cnn
-python setup.py install
+python3 setup.py install
 
 # install jupyter lab
 echo $password | sudo -S apt install -y nodejs npm
@@ -31,7 +32,7 @@ fi
 # create new environment with stable-baselines2
 python3 -m virtualenv -p python3 ~/.virtualenvs/sb2 --system-site-packages
 source ~/.virtualenvs/sb2/bin/activate
-pip install -U pip testresources setuptools==65.5.0
+pip install -U pip testresources 
 pip install -U numpy==1.21.1 future==0.18.2 mock==3.0.5 keras_preprocessing==1.1.2 keras_applications==1.0.8 gast==0.4.0
 pip install -U protobuf pybind11 cython pkgconfig packaging h5py==3.6.0
 pip install -U --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v461 tensorflow==1.15.5+nv22.1

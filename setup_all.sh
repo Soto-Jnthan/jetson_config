@@ -154,17 +154,17 @@ setup_gpio_and_comms()
 
 write_boot_script_step2()
 {
-	echo "$SCRIPTPATH -2 $OPTIONS" >> ~/.bashrc
+    echo "$SCRIPTPATH -2 $OPTIONS" >> ~/.bashrc
 }
 
 write_boot_script_step3()
 {
-	echo "$SCRIPTPATH -3 $OPTIONS" >> ~/.bashrc
+    echo "$SCRIPTPATH -3 $OPTIONS" >> ~/.bashrc
 }
 
 remove_boot_script()
 {
-	sed -i '$ d' ~/.bashrc
+    sed -i '$ d' ~/.bashrc
 }
 
 main()

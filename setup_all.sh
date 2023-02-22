@@ -173,7 +173,7 @@ main()
 		;;
 	3)
 		echo "Setting up step 3.."
-		remove_boot_script && setup_step3
+		remove_boot_script && setup_step3 && sudo reboot
 		;;
 	esac
 }

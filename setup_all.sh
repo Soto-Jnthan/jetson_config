@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 password=$1
 
 SCRIPTPATH="$(realpath $0)"
@@ -64,6 +62,45 @@ teardown_install_folder()
 	conda deactivate
 }
 
+install_pytorch()
+{
+    setup_install_folder
+    wget https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+    sudo apt-get install -y libopenblas-base libopenmpi-dev
+    pip install torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+    teardown_install_folder
+}
+
+install_torchvision()
+{
+    setup_install_folder
+    sudo apt-get install -y libjpeg-dev zlib1g-dev libpython3-dev libavcodec-dev libavformat-dev libswscale-dev
+    git clone --branch v0.11.1 https://github.com/pytorch/vision torchvision
+    cd torchvision
+    export BUILD_VERSION=0.11.1
+    python setup.py install --user
+    teardown_install_folder
+}
+
+install_tensorflow()
+{
+    setup_install_folder
+    pip3 install --pre --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v46 tensorflow
+    teardown_install_folder
+}
+
+install_jupyterlab()
+{
+    setup_install_folder
+    conda install -y jupyterlab
+    teardown_install_folder
+}
+
+help()
+{
+    echo $SCRIPTPATH [-123h] [--pytorch] [--torchvision] [--tensorflow] [--jupyterlab]
+}
+
 install_SB3()
 {
 	setup_install_folder
@@ -109,7 +146,9 @@ switch_to_lubuntu()
 
 setup_gpio_and_comms()
 {
-	sudo pip3 install -U jetson-stats Jetson.GPIO pyserial
+	sudo -H pip3 install -U jetson-stats==3.1.4
+	sudo systemctl restart jetson_stats.service
+	sudo pip3 install -U Jetson.GPIO pyserial
 	sudo adduser $USER dialout
 }
 
@@ -130,52 +169,102 @@ remove_boot_script()
 
 main()
 {
-	echo " [  Jetson Nano Setup v0.1  ]"
+    OPTIONS=$(getopt -o 123h --long pytorch,torchvision,tensorflow,jupyterlab -n "$0" -- "$@")
 
-	INSTALL_STEP=0
-	while true; do
-		case "$1" in
-			-1)
-				if [ "$INSTALL_STEP" -le "1" ]
-				then
-					INSTALL_STEP=1
-				fi
-				;;
-			-2)
-				if [ "$INSTALL_STEP" -le "2" ]
-				then
-					INSTALL_STEP=2
-				fi
-				;;
-			-3)
-				if [ "$INSTALL_STEP" -le "3" ]
-				then
-					INSTALL_STEP=3
-				fi
-				;;
-			-- ) break ;;
-		esac
-		shift
-	done
+    if [ "$?" -ne "0" ]
+    then
+        help
+        exit 1
+    fi
 
-	if [ "$INSTALL_STEP" -eq "0" ] ; then
-		INSTALL_STEP=1
-	fi
+    eval set -- "$OPTIONS"
 
-	case $INSTALL_STEP in
-	1)
-		echo "Setting up step 1.."
-		setup_step1 && write_boot_script_step2 && sudo reboot
-		;;
-	2)
-		echo "Setting up step 2.."
-		remove_boot_script && setup_step2 && write_boot_script_step3 && sudo reboot
-		;;
-	3)
-		echo "Setting up step 3.."
-		remove_boot_script && setup_step3 && sudo reboot
-		;;
-	esac
+    echo " [  Jetson Nano Setup v0.1  ]"
+
+    INSTALL_PYTORCH=false
+    INSTALL_TORCHVISION=false
+    INSTALL_TENSORFLOW=false
+    INSTALL_JUPYTERLAB=false
+    INSTALL_STEP=0
+    while true; do
+        case "$1" in 
+            -1) 
+                if [ "$INSTALL_STEP" -le "1" ]
+                then 
+                    INSTALL_STEP=1 
+                fi
+                ;;
+            -2) 
+                if [ "$INSTALL_STEP" -le "2" ]
+                then 
+                    INSTALL_STEP=2 
+                fi
+                ;;
+            -3) 
+                if [ "$INSTALL_STEP" -le "3" ]
+                then 
+                    INSTALL_STEP=3 
+                fi
+                ;;
+            -h )
+                help
+                exit 0
+                ;;
+            --pytorch) 
+                INSTALL_PYTORCH=true
+                ;;
+            --torchvision) 
+                INSTALL_TORCHVISION=true
+                ;;
+            --tensorflow)
+                INSTALL_TENSORFLOW=true
+                ;;
+            --jupyterlab)
+                INSTALL_JUPYTERLAB=true
+                ;;
+            -- ) break ;;
+        esac
+        shift
+    done
+
+    if [ "$INSTALL_STEP" -eq "0" ] ; then
+        INSTALL_STEP=1
+    fi
+
+    case $INSTALL_STEP in
+        1)
+            echo "Setting up step 1.."
+            setup_step1 && write_boot_script_step2 && sudo reboot
+            ;;
+        2) 
+            echo "Setting up step 2.."
+            remove_boot_script && setup_step2 && write_boot_script_step3 && sudo reboot
+            ;;
+        3)
+            echo "Setting up step 3.."
+            remove_boot_script && setup_step3 && sudo reboot
+            ;;
+    esac
+
+    if [ "$INSTALL_PYTORCH" = true ]; then 
+        echo "Setting up PyTorch.."
+        install_pytorch
+    fi
+
+    if [ "$INSTALL_TORCHVISION" = true ]; then 
+        echo "Setting up Torchvision.."
+        install_torchvision
+    fi
+
+    if [ "$INSTALL_TENSORFLOW" = true ]; then 
+        echo "Setting up TensorFlow.."
+        install_tensorflow
+    fi
+
+    if [ "$INSTALL_JUPYTERLAB" = true ]; then 
+        echo "Setting up JupyterLab.."
+        install_jupyterlab
+    fi
 }
 
 main $@

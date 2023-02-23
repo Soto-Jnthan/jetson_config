@@ -17,13 +17,13 @@ setup_step1()
         echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> ${HOME}/.bashrc
         echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}" >> ${HOME}/.bashrc
     fi
-	echo "OPENBLAS_CORETYPE=ARMV8" >> ${HOME}/.bashrc
+    echo "OPENBLAS_CORETYPE=ARMV8" >> ${HOME}/.bashrc
 }
 
 setup_step2()
 {
     setup_gpio_and_comms
-	curl micro.mamba.pm/install.sh | bash
+    curl micro.mamba.pm/install.sh | bash
 }
 
 setup_gpio_and_comms()

@@ -23,7 +23,12 @@ setup_step1()
 setup_step2()
 {
     setup_gpio_and_comms
-    curl micro.mamba.pm/install.sh | bash
+    cd ~
+    mkdir -p install
+    cd install 
+    wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-pypy3-Linux-aarch64.sh .
+    chmod a+x Mambaforge-pypy3-Linux-aarch64.sh
+    ./Mambaforge-pypy3-Linux-aarch64.sh
 }
 
 setup_gpio_and_comms()
@@ -36,10 +41,10 @@ setup_gpio_and_comms()
 
 setup_step3()
 {
-    micromamba config --set auto_activate_base false
+    mamba config --set auto_activate_base false
     sudo apt install -y python3-h5py libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev
-    micromamba create -y -n sb3 python=3.6
-    micromamba install -n sb3 -y matplotlib pandas numpy pillow scipy tqdm scikit-image scikit-learn seaborn cython h5py jupyter ipywidgets -c conda-forge
+    mamba create -y -n sb3 python=3.6
+    mamba install -n sb3 -y matplotlib pandas numpy pillow scipy tqdm scikit-image scikit-learn seaborn cython h5py jupyter ipywidgets -c conda-forge
     install_SB3
     setup_jupyterlab
     make_swapfile
@@ -55,12 +60,12 @@ setup_install_folder()
     fi
     cd ~/install
     eval "$(conda shell.bash hook)"
-    micromamba activate sb3
+    mamba activate sb3
 }
 
 teardown_install_folder()
 {
-    micromamba deactivate
+    mamba deactivate
 }
 
 install_SB3()
@@ -69,14 +74,14 @@ install_SB3()
     wget https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
     sudo apt-get install -y libopenblas-base libopenmpi-dev
     pip install torch-1.10.0-cp36-cp36m-linux_aarch64.whl
-    micromamba install -n sb3 -y stable-baselines3==1.3.0 -c conda-forge
+    mamba install -n sb3 -y stable-baselines3==1.3.0 -c conda-forge
     teardown_install_folder
 }
 
 setup_jupyterlab()
 {
     setup_install_folder
-    micromamba install -y jupyterlab
+    mamba install -y jupyterlab
     jupyter lab --generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
     jetsonip=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(192.([0-9]*\.){2}[0-9]*).*/\2/p'`

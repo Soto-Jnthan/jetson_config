@@ -12,25 +12,30 @@ setup_step1()
     sudo apt install -y libhdf5-serial-dev hdf5-tools libhdf5-dev zlib1g-dev zip libjpeg8-dev libopenblas-base liblapack-dev  
     sudo apt install -y libatlas-base-dev gfortran libfreetype6-dev build-essential libopenmpi-dev libblas-dev libpng-dev
     sudo apt install -y nano htop python3-pip python3-dev python3-smbus cmake
-    sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
     if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then
         echo "** Add CUDA stuffs into ~/.bashrc"
         echo >> ${HOME}/.bashrc
         echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> ${HOME}/.bashrc
         echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}" >> ${HOME}/.bashrc
     fi
-    echo "OPENBLAS_CORETYPE=ARMV8" >> ${HOME}/.bashrc
 }
 
 setup_step2()
 {
-    sudo pip3 install -U pip testresources setuptools
-    sudo pip3 install -U flask
-    sudo pip3 install -U numpy==1.19.4 pillow==8.4.0 matplotlib==3.3.4 pandas==1.1.5 scipy==1.5.3 cython
-    sudo pip3 install -U h5py scikit-learn==0.22.0 seaborn==0.10.1 
-    sudo pip3 install -U traitlets
+    python3 -m pip install -U pip testresources setuptools
+    python3 -m pip install flask
+    python3 -m pip install -U numpy==1.19.4
+    python3 -m pip install pillow==8.4.0
+    python3 -m pip install matplotlib==3.3.4
+    python3 -m pip install pandas==1.1.5
+    python3 -m pip install scipy==1.5.3
+    python3 -m pip install cython
+    python3 -m pip install scikit-learn==0.22.0
+    python3 -m pip nstall seaborn==0.10.1
+    sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
+    python3 -m pip install -U h5py traitlets  
     sudo -H pip3 install -U jetson-stats==3.1.4
-    sudo pip3 install -U Jetson.GPIO pyserial
+    python3 -m pip install -U Jetson.GPIO pyserial
     sudo apt install -y virtualenv
     sudo adduser $USER dialout
 	sudo systemctl restart jetson_stats.service
@@ -39,7 +44,7 @@ setup_step2()
 setup_step3()
 {
     sudo apt install -y nodejs npm
-    sudo pip3 install -U jupyter jupyterlab
+    python3 -m pip install -U jupyter jupyterlab
     setup_jupyterlab
     install_SB3
     make_swapfile
@@ -62,7 +67,7 @@ install_SB3()
 
 setup_jupyterlab()
 {
-    jupyter lab --generate-config
+    python3 -m notebook --generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
     jetsonip=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(192.([0-9]*\.){2}[0-9]*).*/\2/p'`
     sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"

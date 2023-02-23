@@ -88,7 +88,7 @@ setup_jupyterlab()
     sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"
     sudo bash -c "echo \"Name=jupyterlab\" >> /etc/xdg/autostart/jupyterlab.desktop"
     sudo bash -c "echo \"Exec=jupyter lab --ip=$jetsonip --no-browser --allow-root\" >> /etc/xdg/autostart/jupyterlab.desktop"
-    sudo echo "alias sb3='conda activate sb3'" >> /home/$USER/.bashrc
+    sudo echo "alias sb3='mamba activate sb3'" >> /home/$USER/.bashrc
     teardown_install_folder
 }
 

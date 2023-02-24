@@ -9,10 +9,9 @@ setup_step1()
     sudo apt -y update && sudo apt -y upgrade
     sudo apt remove --purge libreoffice* -y
     sudo -S apt clean -y && sudo -S apt autoremove -y
-    sudo apt install -y libhdf5-serial-dev hdf5-tools libhdf5-dev zlib1g-dev zip libjpeg8-dev libopenblas-base liblapack-dev  
-    sudo apt install -y libatlas-base-dev gfortran libfreetype6-dev build-essential libopenmpi-dev libblas-dev libpng-dev
-    sudo apt install -y nano htop python3-pip python3-dev python3-smbus cmake
-    if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then
+    sudo apt install -y dkms nano htop python3-pip build-essential cmake
+    sudo apt install -y libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev libblas-dev libopenblas-base libopenmpi-dev
+    if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then 
         echo "** Add CUDA stuffs into ~/.bashrc"
         echo >> ${HOME}/.bashrc
         echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> ${HOME}/.bashrc
@@ -22,29 +21,22 @@ setup_step1()
 
 setup_step2()
 {
-    python3 -m pip install -U pip testresources setuptools protobuf
-    python3 -m pip install flask
-    python3 -m pip install -U numpy==1.19.4
-    python3 -m pip install pillow==8.4.0
-    python3 -m pip install matplotlib==3.3.4
-    python3 -m pip install pandas==1.1.5
-    python3 -m pip install scipy==1.5.3
-    python3 -m pip install cython
-    python3 -m pip install scikit-learn==0.22.0
-    python3 -m pip install seaborn==0.10.1
-    sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
-    python3 -m pip install -U h5py traitlets 
-    python3 -m pip install -U Jetson.GPIO pyserial
+    python3 -m pip install -U pip wheel testresources setuptools protobuf 
+    python3 -m pip install flask 
+    python3 -m pip install -U numpy==1.19.4 scipy==1.5.3
+	python3 -m pip install matplotlib
+	python3 -m pip install -U Jetson.GPIO pyserial
+	sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
     sudo -H pip3 install -U jetson-stats==3.1.4
     sudo apt install -y virtualenv
     sudo adduser $USER dialout
     sudo systemctl restart jetson_stats.service
+    install_wifi_drivers	
+    install_fan_drivers
 }
 
 setup_step3()
 {
-    sudo apt install -y nodejs npm
-    python3 -m pip install -U jupyter jupyterlab
     setup_jupyterlab
     install_SB3
     make_swapfile
@@ -54,24 +46,36 @@ setup_step3()
 
 setup_jupyterlab()
 {
-    python3 -m jupyterlab --generate-config
+	sudo apt install libzmq3-dev libffi-dev libssl1.0-dev
+	sudo apt install nodejs npm 
+	sudo npm cache clean -f
+	sudo npm install -g n
+	sudo n stable
+	node -v
+	sudo -H pip3 install jupyter jupyterlab
+	sudo jupyter labextension install @jupyter-widgets/jupyterlab-manager
+	jupyter lab -–generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
     sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"
     sudo bash -c "echo \"Name=jupyterlab\" >> /etc/xdg/autostart/jupyterlab.desktop"
-    sudo bash -c "echo \"Exec=python3 -m jupyterlab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root\" >> /etc/xdg/autostart/jupyterlab.desktop"
+    sudo bash -c "echo \"Exec=jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root\" >> /etc/xdg/autostart/jupyterlab.desktop"
+	echo >> ${HOME}/.bashrc
+	echo "if ! jupyter lab list | grep -q 'http' ; then" >> ${HOME}/.bashrc
+	echo "	jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root &" >> ${HOME}/.bashrc
+	echo "fi" >> ${HOME}/.bashrc
 }
 
 install_SB3()
 {
     python3 -m virtualenv -p python3 ~/.virtualenvs/sb3 --system-site-packages
     source ~/.virtualenvs/sb3/bin/activate
-    wget https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+    wget https://nvidia.box.com/shared/static/fjtbno0vp-o676a25cgvuqc1wty0fkkg6.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
     pip install -U torch-1.10.0-cp36-cp36m-linux_aarch64.whl
-    pip install -U stable-baselines3==1.3.0
+    pip install -U stable-baselines3==1.3.0 tensorboard
     rm torch-1.10.0-cp36-cp36m-linux_aarch64.whl
     python3 -m ipykernel install --user --name=sb3
     deactivate
-    sudo echo "alias sb3='source ~/.virtualenvs/sb3/bin/activate'" >> /home/$USER/.bashrc
+    echo "alias sb3='source ~/.virtualenvs/sb3/bin/activate'" >> ${HOME}/.bashrc
 }
 
 make_swapfile()
@@ -81,6 +85,29 @@ make_swapfile()
     sudo mkswap /var/swapfile
     sudo swapon /var/swapfile
     sudo bash -c 'echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab'
+}
+
+install_wifi_drivers()
+{
+	git clone https://github.com/cilynx/rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959.git
+	cd rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959
+	VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
+	sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
+	sudo dkms add -m rtl88x2bu -v ${VER}
+	sudo dkms build -m rtl88x2bu -v ${VER}
+	sudo dkms install -m rtl88x2bu -v ${VER}
+	sudo modprobe 88x2bu
+	cd ..
+	sudo rm -r rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959
+}
+
+install_fan_drivers()
+{
+	git clone https://github.com/Pyrestone/jetson-fan-ctl
+	cd jetson-fan-ctl
+	sudo ./install.sh
+	cd ..
+	sudo rm -r jetson-fan-ctl
 }
 
 switch_to_lubuntu()

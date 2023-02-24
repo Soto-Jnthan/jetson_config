@@ -24,9 +24,9 @@ setup_step2()
     python3 -m pip install -U pip wheel testresources setuptools protobuf 
     python3 -m pip install flask 
     python3 -m pip install -U numpy==1.19.4 scipy==1.5.3
-	python3 -m pip install matplotlib
-	python3 -m pip install -U Jetson.GPIO pyserial
-	sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
+    python3 -m pip install matplotlib
+    python3 -m pip install -U Jetson.GPIO pyserial
+    sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
     sudo -H pip3 install -U jetson-stats==3.1.4
     sudo apt install -y virtualenv
     sudo adduser $USER dialout
@@ -46,23 +46,23 @@ setup_step3()
 
 setup_jupyterlab()
 {
-	sudo apt install libzmq3-dev libffi-dev libssl1.0-dev
-	sudo apt install nodejs npm 
-	sudo npm cache clean -f
-	sudo npm install -g n
-	sudo n stable
-	node -v
-	sudo -H pip3 install jupyter jupyterlab
-	sudo jupyter labextension install @jupyter-widgets/jupyterlab-manager
-	jupyter lab -–generate-config
+    sudo apt install libzmq3-dev libffi-dev libssl1.0-dev -y
+    sudo apt install nodejs npm -y
+    sudo npm cache clean -f
+    sudo npm install -g n
+    sudo n stable
+    node -v
+    sudo -H pip3 install jupyter jupyterlab
+    sudo jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    jupyter lab -–generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
     sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"
     sudo bash -c "echo \"Name=jupyterlab\" >> /etc/xdg/autostart/jupyterlab.desktop"
     sudo bash -c "echo \"Exec=jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root\" >> /etc/xdg/autostart/jupyterlab.desktop"
-	echo >> ${HOME}/.bashrc
-	echo "if ! jupyter lab list | grep -q 'http' ; then" >> ${HOME}/.bashrc
-	echo "	jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root &" >> ${HOME}/.bashrc
-	echo "fi" >> ${HOME}/.bashrc
+    echo >> ${HOME}/.bashrc
+    echo "if ! jupyter lab list | grep -q 'http' ; then" >> ${HOME}/.bashrc
+    echo "	jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root &" >> ${HOME}/.bashrc
+    echo "fi" >> ${HOME}/.bashrc
 }
 
 install_SB3()
@@ -89,25 +89,25 @@ make_swapfile()
 
 install_wifi_drivers()
 {
-	git clone https://github.com/cilynx/rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959.git
-	cd rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959
-	VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
-	sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
-	sudo dkms add -m rtl88x2bu -v ${VER}
-	sudo dkms build -m rtl88x2bu -v ${VER}
-	sudo dkms install -m rtl88x2bu -v ${VER}
-	sudo modprobe 88x2bu
-	cd ..
-	sudo rm -r rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959
+    git clone https://github.com/cilynx/rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959.git
+    cd rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959
+    VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
+    sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
+    sudo dkms add -m rtl88x2bu -v ${VER}
+    sudo dkms build -m rtl88x2bu -v ${VER}
+    sudo dkms install -m rtl88x2bu -v ${VER}
+    sudo modprobe 88x2bu
+    cd ..
+    sudo rm -r rtl88x2BU_WiFi_linux_v5.3.1_27678.20180430_COEX20180427-5959
 }
 
 install_fan_drivers()
 {
-	git clone https://github.com/Pyrestone/jetson-fan-ctl
-	cd jetson-fan-ctl
-	sudo ./install.sh
-	cd ..
-	sudo rm -r jetson-fan-ctl
+    git clone https://github.com/Pyrestone/jetson-fan-ctl
+    cd jetson-fan-ctl
+    sudo ./install.sh
+    cd ..
+    sudo rm -r jetson-fan-ctl
 }
 
 switch_to_lubuntu()

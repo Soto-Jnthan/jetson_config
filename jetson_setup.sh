@@ -22,7 +22,7 @@ setup_step1()
 
 setup_step2()
 {
-    python3 -m pip install -U pip testresources setuptools
+    python3 -m pip install -U pip testresources setuptools protobuf
     python3 -m pip install flask
     python3 -m pip install -U numpy==1.19.4
     python3 -m pip install pillow==8.4.0
@@ -31,14 +31,14 @@ setup_step2()
     python3 -m pip install scipy==1.5.3
     python3 -m pip install cython
     python3 -m pip install scikit-learn==0.22.0
-    python3 -m pip nstall seaborn==0.10.1
+    python3 -m pip install seaborn==0.10.1
     sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
-    python3 -m pip install -U h5py traitlets  
-    sudo -H pip3 install -U jetson-stats==3.1.4
+    python3 -m pip install -U h5py traitlets 
     python3 -m pip install -U Jetson.GPIO pyserial
+    sudo -H pip3 install -U jetson-stats==3.1.4
     sudo apt install -y virtualenv
     sudo adduser $USER dialout
-	sudo systemctl restart jetson_stats.service
+    sudo systemctl restart jetson_stats.service
 }
 
 setup_step3()
@@ -52,6 +52,15 @@ setup_step3()
     sudo -S apt clean -y && sudo -S apt autoremove -y
 }
 
+setup_jupyterlab()
+{
+    python3 -m jupyterlab --generate-config
+    python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
+    sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"
+    sudo bash -c "echo \"Name=jupyterlab\" >> /etc/xdg/autostart/jupyterlab.desktop"
+    sudo bash -c "echo \"Exec=python3 -m jupyterlab --ip=$(ip -o route get 8.8.8.8 | grep -oP '(?<=src )\S+') --no-browser --allow-root\" >> /etc/xdg/autostart/jupyterlab.desktop"
+}
+
 install_SB3()
 {
     python3 -m virtualenv -p python3 ~/.virtualenvs/sb3 --system-site-packages
@@ -63,16 +72,6 @@ install_SB3()
     python3 -m ipykernel install --user --name=sb3
     deactivate
     sudo echo "alias sb3='source ~/.virtualenvs/sb3/bin/activate'" >> /home/$USER/.bashrc
-}
-
-setup_jupyterlab()
-{
-    python3 -m notebook --generate-config
-    python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
-    jetsonip=`ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(192.([0-9]*\.){2}[0-9]*).*/\2/p'`
-    sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"
-    sudo bash -c "echo \"Name=jupyterlab\" >> /etc/xdg/autostart/jupyterlab.desktop"
-    sudo bash -c "echo \"Exec=jupyter lab --ip=$jetsonip --no-browser --allow-root\" >> /etc/xdg/autostart/jupyterlab.desktop"
 }
 
 make_swapfile()

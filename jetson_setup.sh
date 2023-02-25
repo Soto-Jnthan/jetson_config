@@ -32,7 +32,7 @@ setup_step2()
     python3 -m pip install --user install -U scipy==1.5.3
     python3 -m pip install --user install -U matplotlib 
     python3 -m pip install --user install -U Cython packaging Jetson.GPIO pyserial
-	python3 -m pip install --user install jupyterlab
+    python3 -m pip install --user install jupyterlab
     sudo -H python3 -m pip install -U jetson-stats==3.1.4
     sudo adduser $USER dialout
     sudo systemctl restart jetson_stats.service	

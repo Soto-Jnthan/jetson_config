@@ -52,8 +52,8 @@ setup_jupyterlab()
     sudo npm cache clean -f
     sudo npm install -g n
     sudo n stable
-	export PATH="$HOME/.local/bin:$PATH"
-	nvm install 17
+    export PATH="$HOME/.local/bin:$PATH"
+    nvm install 17
     node -v
     pip3 install --user jupyter jupyterlab
     jupyter labextension install @jupyter-widgets/jupyterlab-manager

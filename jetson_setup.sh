@@ -20,10 +20,10 @@ setup_step1()
 
 setup_step2()
 {
-    python3 -m pip install -U pip testresources setuptools protobuf
-    python3 -m pip install -U flask 
+    python3 -m pip install -U pip testresources setuptools 
+    python3 -m pip install flask 
     python3 -m pip install -U numpy==1.19.4 
-    python3 -m pip install -U scipy==1.5.3 matplotlib Cython Jetson.GPIO pyserial 
+    python3 -m pip install -U scipy==1.5.3 matplotlib Cython Jetson.GPIO pyserial
     sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
     python3 -m pip install -U h5py
     sudo -H pip3 install -U jetson-stats==3.1.4

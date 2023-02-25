@@ -7,8 +7,8 @@ SCRIPTPATH="$(realpath $0)"
 setup_step1()
 {
     sudo apt -y update && sudo apt -y upgrade
-    sudo apt remove --purge libreoffice* -y
-    sudo apt install -y dkms nano htop python3-pip build-essential
+    sudo apt remove --purge libreoffice* nodejs* -y
+    sudo apt install -y dkms nano htop curl python3-pip build-essential
     sudo apt install -y libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev libblas-dev libopenblas-base libopenmpi-dev
     if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then 
         echo "** Add CUDA stuffs into ~/.bashrc"
@@ -16,6 +16,7 @@ setup_step1()
         echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> ${HOME}/.bashrc
         echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}" >> ${HOME}/.bashrc
     fi
+    sudo -S apt clean -y && sudo -S apt autoremove -y
 }
 
 setup_step2()
@@ -33,6 +34,7 @@ setup_step2()
     sudo systemctl restart jetson_stats.service
     install_wifi_drivers	
     install_fan_drivers
+    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 }
 
 setup_step3()
@@ -41,19 +43,20 @@ setup_step3()
     install_SB3
     make_swapfile
     switch_to_lubuntu
-    sudo -S apt clean -y && sudo -S apt autoremove -y
 }
 
 setup_jupyterlab()
 {
     sudo apt install libzmq3-dev libffi-dev libssl1.0-dev -y
-    sudo apt install nodejs npm -y
+    sudo apt install npm -y
     sudo npm cache clean -f
     sudo npm install -g n
     sudo n stable
+	export PATH="$HOME/.local/bin:$PATH"
+	nvm install 17
     node -v
-    sudo -H pip3 install jupyter jupyterlab
-    sudo jupyter labextension install @jupyter-widgets/jupyterlab-manager
+    pip3 install --user jupyter jupyterlab
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager
     jupyter lab -–generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"
     sudo bash -c "echo \"[Desktop Entry]\" >> /etc/xdg/autostart/jupyterlab.desktop"

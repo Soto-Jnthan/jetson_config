@@ -16,7 +16,6 @@ setup_step1()
         echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> ${HOME}/.bashrc
         echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}" >> ${HOME}/.bashrc
     fi
-    sudo -S apt clean -y && sudo -S apt autoremove -y
 }
 
 setup_step2()
@@ -34,7 +33,6 @@ setup_step2()
     sudo systemctl restart jetson_stats.service
     install_wifi_drivers	
     install_fan_drivers
-    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
 }
 
 setup_step3()
@@ -43,6 +41,7 @@ setup_step3()
     install_SB3
     make_swapfile
     switch_to_lubuntu
+    sudo -S apt clean -y && sudo -S apt autoremove -y
 }
 
 setup_jupyterlab()
@@ -51,11 +50,9 @@ setup_jupyterlab()
     sudo apt install npm -y
     sudo npm cache clean -f
     sudo npm install -g n
-    sudo n stable
-    export PATH="$HOME/.local/bin:$PATH"
-    nvm install 17
+    sudo n 16
     node -v
-    pip3 install --user jupyter jupyterlab
+    sudo -H pip3 install jupyterlab
     jupyter labextension install @jupyter-widgets/jupyterlab-manager
     jupyter lab -–generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"

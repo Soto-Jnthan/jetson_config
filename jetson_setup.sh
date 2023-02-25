@@ -8,7 +8,7 @@ setup_step1()
 {
     sudo apt -y update && sudo apt -y upgrade
     sudo apt remove --purge libreoffice* nodejs* -y
-    sudo apt install -y dkms nano htop curl python3-pip build-essential
+    sudo apt install -y dkms nano htop curl zip python3-pip build-essential
     sudo apt install -y libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev libblas-dev libopenblas-base libopenmpi-dev
     if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then 
         echo "** Add CUDA stuffs into ~/.bashrc"
@@ -20,13 +20,12 @@ setup_step1()
 
 setup_step2()
 {
-    python3 -m pip install -U pip testresources setuptools 
-    python3 -m pip install flask 
+    python3 -m pip install -U pip testresources setuptools protobuf
+    python3 -m pip install -U flask 
     python3 -m pip install -U numpy==1.19.4 
-    python3 -m pip install scipy==1.5.3
-    python3 -m pip install matplotlib cython
-    python3 -m pip install -U Jetson.GPIO pyserial
+    python3 -m pip install -U scipy==1.5.3 matplotlib Cython Jetson.GPIO pyserial 
     sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
+    python3 -m pip install -U h5py
     sudo -H pip3 install -U jetson-stats==3.1.4
     sudo apt install -y virtualenv
     sudo adduser $USER dialout

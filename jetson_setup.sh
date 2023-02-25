@@ -8,7 +8,7 @@ setup_step1()
 {
     sudo apt -y update && sudo apt -y upgrade
     sudo apt remove --purge libreoffice* nodejs* -y
-    sudo apt install -y dkms nano htop curl zip python3-pip build-essential
+    sudo apt install -y dkms nano htop curl python3-pip build-essential
     sudo apt install -y libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev libblas-dev libopenblas-base libopenmpi-dev
     if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then 
         echo "** Add CUDA stuffs into ~/.bashrc"
@@ -16,16 +16,19 @@ setup_step1()
         echo "export PATH=/usr/local/cuda/bin\${PATH:+:\${PATH}}" >> ${HOME}/.bashrc
         echo "export LD_LIBRARY_PATH=/usr/local/cuda/lib64\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}" >> ${HOME}/.bashrc
     fi
+    echo >> ${HOME}/.bashrc
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ${HOME}/.bashrc
 }
 
 setup_step2()
 {
-    python3 -m pip install -U pip testresources setuptools 
-    python3 -m pip install flask 
-    python3 -m pip install -U numpy==1.19.4 
-    python3 -m pip install -U scipy==1.5.3 matplotlib Cython Jetson.GPIO pyserial
+    pip3 install --user -U pip testresources setuptools 
+    pip3 install --user install flask 
+    pip3 install --user install -U numpy==1.19.4 
+    pip3 install --user install -U scipy==1.5.3 matplotlib Cython pandas packaging
     sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
-    python3 -m pip install -U h5py
+    pip3 install --user install -U traitlets
+    pip3 install --user install -U Jetson.GPIO pyserial
     sudo -H pip3 install -U jetson-stats==3.1.4
     sudo apt install -y virtualenv
     sudo adduser $USER dialout
@@ -51,7 +54,7 @@ setup_jupyterlab()
     sudo npm install -g n
     sudo n 16
     node -v
-    sudo -H pip3 install jupyterlab
+    pip3 install --user install jupyterlab
     jupyter labextension install @jupyter-widgets/jupyterlab-manager
     jupyter lab -–generate-config
     python3 -c "from notebook.auth.security import set_password; set_password('$password', '$HOME/.jupyter/jupyter_notebook_config.json')"

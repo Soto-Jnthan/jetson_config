@@ -26,7 +26,7 @@ setup_step2()
     sudo npm cache clean -f
     sudo npm install -g n
     sudo n 16
-	create_SB3_env
+    create_SB3_env
     sudo -H python3 -m pip install -U jetson-stats==3.1.4
     sudo adduser $USER dialout
     sudo systemctl restart jetson_stats.service
@@ -75,7 +75,6 @@ install_fan_drivers()
 setup_step3()
 {
     setup_jupyterlab
-    install_SB3
     make_swapfile
     switch_to_lubuntu
     sudo -S apt clean -y && sudo -S apt autoremove -y

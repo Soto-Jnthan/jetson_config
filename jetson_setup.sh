@@ -1,7 +1,5 @@
 #!/bin/bash
 
-password=$USER
-
 SCRIPTPATH="$(realpath $0)"
 
 setup_step1()
@@ -47,20 +45,20 @@ create_SB3_env()
     python -m pip install -U matplotlib 
     python -m pip install -U Cython packaging Jetson.GPIO pyserial
     python -m pip install jupyterlab
-    python -m pip -U torch-1.10.0-cp36-cp36m-linux_aarch64.whl
-    python -m pip -U stable-baselines3==1.3.0 tensorboard
+    python -m pip install -U torch-1.10.0-cp36-cp36m-linux_aarch64.whl
+    python -m pip install -U stable-baselines3==1.3.0 tensorboard
     rm torch-1.10.0-cp36-cp36m-linux_aarch64.whl
-    python -m ipykernel install --name=sb3
+    python -m ipykernel install --user --name=sb3
     deactivate
 }
 
 install_wifi_drivers()
 {
-    git clone https://github.com/jeremyb31/rtl8812au-1
-    cd rtl8812au-1
-    sudo ./dkms-install.sh
+    git clone -b v5.6.4.2 https://github.com/aircrack-ng/rtl8812au.git
+    cd rtl*
+    sudo make dkms_install
     cd ..
-    sudo rm -r rtl8812au-1
+    sudo rm -r rtl8812au
 }
 
 install_fan_drivers()
@@ -82,17 +80,20 @@ setup_step3()
 
 setup_jupyterlab()
 {
-    sb3
+    source ~/.virtualenvs/sb3/bin/activate
     jupyter labextension install @jupyter-widgets/jupyterlab-manager
     jupyter lab --generate-config
+	jupyter server password
+	deactivate	
     echo "[Desktop Entry]" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo "Name=jupyterlab" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
-    echo 'Exec=bash -c '"'"'sb3 && jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root'"'"'' | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
+    echo 'Exec=bash -c '"'"'source ~/.virtualenvs/sb3/bin/activate && jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root'"'"'' | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo >> ${HOME}/.bashrc
+	echo "source ~/.virtualenvs/sb3/bin/activate" >> ${HOME}/.bashrc
     echo "if ! jupyter lab list | grep -q 'http' ; then" >> ${HOME}/.bashrc
-    echo '	sb3 && jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root &' >> ${HOME}/.bashrc
+    echo '	jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root &' >> ${HOME}/.bashrc
     echo "fi" >> ${HOME}/.bashrc
-    deactivate
+	echo "deactivate" >> ${HOME}/.bashrc
 }
 
 make_swapfile()

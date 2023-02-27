@@ -83,17 +83,17 @@ setup_jupyterlab()
     source ~/.virtualenvs/sb3/bin/activate
     jupyter labextension install @jupyter-widgets/jupyterlab-manager
     jupyter lab --generate-config
-	jupyter server password
-	deactivate	
+    jupyter server password
+    deactivate	
     echo "[Desktop Entry]" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo "Name=jupyterlab" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo 'Exec=bash -c '"'"'source ~/.virtualenvs/sb3/bin/activate && jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root'"'"'' | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo >> ${HOME}/.bashrc
-	echo "source ~/.virtualenvs/sb3/bin/activate" >> ${HOME}/.bashrc
+    echo "source ~/.virtualenvs/sb3/bin/activate" >> ${HOME}/.bashrc
     echo "if ! jupyter lab list | grep -q 'http' ; then" >> ${HOME}/.bashrc
     echo '	jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root &' >> ${HOME}/.bashrc
     echo "fi" >> ${HOME}/.bashrc
-	echo "deactivate" >> ${HOME}/.bashrc
+    echo "deactivate" >> ${HOME}/.bashrc
 }
 
 make_swapfile()

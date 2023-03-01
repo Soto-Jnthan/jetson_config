@@ -13,7 +13,6 @@ setup_step1()
     sudo apt remove --purge libreoffice* nodejs* -y
     sudo apt install -y nano htop dkms npm python3-pip virtualenv libzmq3-dev libffi-dev libssl1.0-dev 
     sudo apt install -y libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev libblas-dev libopenblas-base libopenmpi-dev
-    sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
     if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then 
         echo "** Add CUDA stuffs into ~/.bashrc"
         echo >> ${HOME}/.bashrc
@@ -22,6 +21,7 @@ setup_step1()
     fi
     echo >> ${HOME}/.bashrc
     echo 'export PATH="$HOME/.local/bin:$PATH"' >> ${HOME}/.bashrc
+    sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
 }
 
 setup_step2()
@@ -88,7 +88,8 @@ setup_jupyterlab()
     jupyter server password
     deactivate	
     echo "[Desktop Entry]" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
-    echo "Name=jupyterlab" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
+    echo "Type=Application" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
+	echo "Name=jupyterlab" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo 'Exec=bash -c '"'"'source ~/.virtualenvs/sb3/bin/activate && jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root'"'"'' | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo >> ${HOME}/.bashrc
     echo "source ~/.virtualenvs/sb3/bin/activate" >> ${HOME}/.bashrc

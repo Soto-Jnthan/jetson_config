@@ -89,7 +89,7 @@ setup_jupyterlab()
     deactivate	
     echo "[Desktop Entry]" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo "Type=Application" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
-	echo "Name=jupyterlab" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
+    echo "Name=jupyterlab" | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo 'Exec=bash -c '"'"'source ~/.virtualenvs/sb3/bin/activate && jupyter lab --ip=$(ip -o route get 8.8.8.8 | grep -oP "(?<=src )\S+") --no-browser --allow-root'"'"'' | sudo tee -a -i /etc/xdg/autostart/jupyterlab.desktop
     echo >> ${HOME}/.bashrc
     echo "source ~/.virtualenvs/sb3/bin/activate" >> ${HOME}/.bashrc

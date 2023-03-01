@@ -3,10 +3,15 @@
 SCRIPTPATH="$(realpath $0)"
 
 setup_step1()
-{
+{	
+    sudo apt install -y ntp ntpdate
+    sudo dpkg-reconfigure ntp
+    ntpq -p
+    timedatectl set-ntp true
+    sudo systemctl restart systemd-timedated systemd-timesyncd
     sudo apt -y update && sudo apt -y upgrade
     sudo apt remove --purge libreoffice* nodejs* -y
-    sudo apt install -y nano htop dkms python3-pip libzmq3-dev libffi-dev libssl1.0-dev npm virtualenv
+    sudo apt install -y nano htop dkms npm python3-pip virtualenv libzmq3-dev libffi-dev libssl1.0-dev 
     sudo apt install -y libhdf5-serial-dev hdf5-tools libpng-dev libfreetype6-dev libblas-dev libopenblas-base libopenmpi-dev
     sudo ln -s /usr/include/locale.h /usr/include/xlocale.h
     if ! grep 'cuda/bin' ${HOME}/.bashrc > /dev/null ; then 
@@ -26,8 +31,8 @@ setup_step2()
     sudo n 16
     create_SB3_env
     sudo -H python3 -m pip install -U jetson-stats==3.1.4
-    sudo adduser $USER dialout
     sudo systemctl restart jetson_stats.service
+    sudo adduser $USER dialout
     install_wifi_drivers	
     install_fan_drivers
 }
@@ -39,14 +44,12 @@ create_SB3_env()
     source ~/.virtualenvs/sb3/bin/activate
     wget https://nvidia.box.com/shared/static/fjtbno0vpo676a25cgvuqc1wty0fkkg6.whl -O torch-1.10.0-cp36-cp36m-linux_aarch64.whl
     python -m pip install -U pip testresources setuptools 
-    python -m pip install flask 
     python -m pip install -U numpy==1.19.4 
     python -m pip install -U scipy==1.5.3
-    python -m pip install -U matplotlib 
-    python -m pip install -U Cython packaging Jetson.GPIO pyserial
-    python -m pip install jupyterlab
+    python -m pip install -U matplotlib Cython packaging
+    python -m pip install jupyterlab Jetson.GPIO pyserial
     python -m pip install -U torch-1.10.0-cp36-cp36m-linux_aarch64.whl
-    python -m pip install -U stable-baselines3==1.3.0 tensorboard
+    python -m pip install -U stable-baselines3==1.3 tensorboard
     rm torch-1.10.0-cp36-cp36m-linux_aarch64.whl
     python -m ipykernel install --user --name=sb3
     deactivate
@@ -74,7 +77,6 @@ setup_step3()
 {
     setup_jupyterlab
     make_swapfile
-    switch_to_lubuntu
     sudo -S apt clean -y && sudo -S apt autoremove -y
 }
 
@@ -103,16 +105,6 @@ make_swapfile()
     sudo mkswap /var/swapfile
     sudo swapon /var/swapfile
     sudo bash -c 'echo "/var/swapfile swap swap defaults 0 0" >> /etc/fstab'
-}
-
-switch_to_lubuntu()
-{
-    sudo apt remove --purge ubuntu-desktop -y
-    sudo apt remove --purge gdm3 -y
-    sudo apt install lxdm -y
-    sudo apt install lxde -y
-    sudo apt install --reinstall lxdm -y
-    sudo sed -i "s|# autologin=dgod|autologin=$USER|g" /etc/lxdm/lxdm.conf
 }
 
 write_boot_script_step2()
